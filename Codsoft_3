@@ -1,0 +1,87 @@
+#include <iostream>
+using namespace std;
+char box[3][3];
+    char x;
+bool draw() {
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            if (box[i][j] != 'X' && box[i][j] != 'O') {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+void boxs() {
+    cout << "\n";
+    cout << " " << box[0][0] << " | " << box[0][1] << " | " << box[0][2] << "\n";
+    cout << "---|---|---\n";
+    cout << " " << box[1][0] << " | " << box[1][1] << " | " << box[1][2] << "\n";
+    cout << "---|---|---\n";
+    cout << " " << box[2][0] << " | " << box[2][1] << " | " << box[2][2] << "\n\n";
+}
+bool final() {
+    if (box[0][0] == x && box[0][1] == x && box[0][2] == x) return true;
+    if (box[1][0] == x && box[1][1] == x && box[1][2] == x) return true;
+    if (box[2][0] == x && box[2][1] == x && box[2][2] == x) return true;
+    if (box[0][0] == x && box[1][0] == x && box[2][0] == x) return true;
+    if (box[0][1] == x && box[1][1] == x && box[2][1] == x) return true;
+    if (box[0][2] == x && box[1][2] == x && box[2][2] == x) return true;
+    if (box[0][0] == x && box[1][1] == x && box[2][2] == x) return true;
+    if (box[0][2] == x && box[1][1] == x && box[2][0] == x) return true;
+
+    return false;
+}
+void setbox() {
+    char num = '1';
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            box[i][j] = num;
+            num++;
+        }
+    }
+}
+int main() {
+    char redo;
+    do {
+        setbox();
+        x = 'X';
+        bool over = false;
+        while (!over) {
+            boxs();
+            int choice;
+            cout << "Player " << x << ", enter place (1-9): ";
+            cin >> choice;
+            if (choice < 1 || choice > 9) {
+                cout << "Wrong choice. Use 1 to 9.\n";
+                continue;
+            }
+            int r = (choice - 1) / 3;
+            int c = (choice - 1) % 3;
+            if (box[r][c] == 'X' || box[r][c] == 'O') {
+                cout << "Already taken. Try again.\n";
+                continue;
+            }
+            box[r][c] = x;
+            if (final()) {
+                boxs();
+                cout << "Player " << x << " wins!\n";
+                over = true;
+            } else if (draw()) {
+                boxs();
+                cout << "Match draw.\n";
+                over = true;
+            } else {
+                // change player
+                if (x == 'X')
+                    x = 'O';
+                else
+                    x = 'X';
+            }
+        }
+        cout << "Play again? (y/n): ";
+        cin >> redo;
+    } while (redo == 'y' || redo == 'Y');
+    cout << "Game over.\n";
+    return 0;
+}
